@@ -13,7 +13,7 @@ public interface IUsuario {
 
     public UsuarioDTO listarUsuarioPorId(Integer id);
 
-    public EditarUsuarioDTO editarUsuario(EditarUsuarioDTO editarUsuarioDTO, Integer idUsuario);
+    public UsuarioDTO editarUsuario(EditarUsuarioDTO editarUsuarioDTO, Integer idUsuario);
 
     public void eliminarUsuario(Integer id);
 

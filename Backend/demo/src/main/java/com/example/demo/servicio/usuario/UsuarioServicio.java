@@ -13,6 +13,8 @@ import com.example.demo.modelo.usuario.ROLE;
 import com.example.demo.modelo.usuario.Usuario;
 import com.example.demo.repositorio.RepositorioUsuario;
 
+import jakarta.persistence.EntityNotFoundException;
+
 @Service
 public class UsuarioServicio implements IUsuario {
 
@@ -36,37 +38,6 @@ public class UsuarioServicio implements IUsuario {
     }
 
     @Override
-    public List<UsuarioDTO> listarUsuarios() {
-
-        List<Usuario> usuarios = repositorioUsuario.findAll();
-        List<UsuarioDTO> usuariosConvertidos = new ArrayList<>(usuarios.size());
-
-        for (Usuario u : usuarios) {
-            usuariosConvertidos.add(convertirUsuarioEnDTO(u));
-        }
-
-        return usuariosConvertidos;
-    }
-
-    @Override
-    public UsuarioDTO listarUsuarioPorId(Integer id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'listarUsuarioPorId'");
-    }
-
-    @Override
-    public EditarUsuarioDTO editarUsuario(EditarUsuarioDTO editarUsuarioDTO, Integer idUsuario) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'editarUsuario'");
-    }
-
-    @Override
-    public void eliminarUsuario(Integer id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'eliminarUsuario'");
-    }
-
-    @Override
     public UsuarioDTO crearUsuarioDTO(CrearUsuarioDTO crearUsuarioDTO) {
 
         Optional<Usuario> buscarUsuario = repositorioUsuario.findUsuarioByCedula(crearUsuarioDTO.getCedula());
@@ -85,13 +56,60 @@ public class UsuarioServicio implements IUsuario {
         nuevoUsuario.setEmail(crearUsuarioDTO.getEmail());
         nuevoUsuario.setPassword(crearUsuarioDTO.getPassword());
         nuevoUsuario.setDireccion(crearUsuarioDTO.getDireccion());
-
         nuevoUsuario.setRole(ROLE.USER);
 
         repositorioUsuario.save(nuevoUsuario);
 
         return convertirUsuarioEnDTO(nuevoUsuario);
 
+    }
+
+    @Override
+    public List<UsuarioDTO> listarUsuarios() {
+
+        List<Usuario> usuarios = repositorioUsuario.findAll();
+        List<UsuarioDTO> usuariosConvertidos = new ArrayList<>(usuarios.size());
+
+        for (Usuario u : usuarios) {
+            usuariosConvertidos.add(convertirUsuarioEnDTO(u));
+        }
+
+        return usuariosConvertidos;
+    }
+
+    @Override
+    public UsuarioDTO listarUsuarioPorId(Integer id) {
+
+        Usuario buscarUsuario = repositorioUsuario.findById(id).orElseThrow(
+                () -> new EntityNotFoundException("No se encontró usuario con el id: %s" + id));
+
+        return convertirUsuarioEnDTO(buscarUsuario);
+    }
+
+    @Override
+    public UsuarioDTO editarUsuario(EditarUsuarioDTO editarUsuarioDTO, Integer idUsuario) {
+
+        Usuario existente = repositorioUsuario.findById(idUsuario).orElseThrow(
+                () -> new EntityNotFoundException("No se encontró usuario con el id: %s" + idUsuario));
+
+        existente.setNombre(editarUsuarioDTO.getNombre());
+        existente.setApellido(editarUsuarioDTO.getApellido());
+        existente.setCedula(editarUsuarioDTO.getCedula());
+        existente.setPassword(editarUsuarioDTO.getPassword());
+        existente.setDireccion(editarUsuarioDTO.getDireccion());
+
+        repositorioUsuario.save(existente);
+
+        return convertirUsuarioEnDTO(existente);
+    }
+
+    @Override
+    public void eliminarUsuario(Integer id) {
+
+        Usuario existente = repositorioUsuario.findById(id).orElseThrow(
+                () -> new EntityNotFoundException("No se encontró usuario con el id: %s" + id));
+
+        repositorioUsuario.delete(existente);
     }
 
 }

@@ -16,7 +16,7 @@ import jakarta.validation.Valid;
 @RequestMapping("tienda/api/usuario")
 public class ControladorUsuario {
 
-    private UsuarioServicio usuarioServicio;
+    private final UsuarioServicio usuarioServicio;
 
     public ControladorUsuario(UsuarioServicio usuarioServicio) {
         this.usuarioServicio = usuarioServicio;
@@ -28,8 +28,8 @@ public class ControladorUsuario {
     }
 
     @GetMapping("/listar")
-    public ResponseEntity<?> listarUsuarios(){
+    public ResponseEntity<?> listarUsuarios() {
         return ResponseEntity.ok(usuarioServicio.listarUsuarios());
     }
-    
+
 }
