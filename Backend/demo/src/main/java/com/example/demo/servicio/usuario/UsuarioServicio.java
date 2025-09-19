@@ -62,7 +62,7 @@ public class UsuarioServicio implements IUsuario {
         if (buscarUsuario.isPresent()) {
             throw new IllegalArgumentException(
                     "El usuario con la cedula: ---" + crearUsuarioDTO.getCedula()
-                            + "--- ya existe en la base de datos");
+                    + "--- ya existe en la base de datos");
         }
 
         Usuario nuevoUsuario = new Usuario();
