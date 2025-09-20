@@ -1,0 +1,22 @@
+.home-page {
+  .hero-section {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+  }
+
+  .features-section {
+    .fas {
+      transition: transform 0.3s ease;
+    }
+    
+    .col-md-4:hover .fas {
+      transform: scale(1.2);
+    }
+  }
+
+  .cta-section {
+    background-color: #f8f9fa;
+  }
+}

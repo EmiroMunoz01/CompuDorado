@@ -1,4 +1,4 @@
-package com.example.demo.controlador;
+package com.example.demo.controlador.API;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
