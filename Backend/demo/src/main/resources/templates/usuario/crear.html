@@ -103,7 +103,7 @@
                                 <label for="email" class="form-label">
                                     <i class="bi bi-envelope"></i> Email *
                                 </label>
-                                <input  th:field="*{email}" class="form-control"
+                                <input type="email" th:field="*{email}" class="form-control"
                                     th:classappend="${#fields.hasErrors('email')} ? 'is-invalid' : ''"
                                     placeholder="usuario@ejemplo.com" required>
                                 <div th:if="${#fields.hasErrors('email')}" class="invalid-feedback">

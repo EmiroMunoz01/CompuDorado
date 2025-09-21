@@ -15,17 +15,17 @@ public interface IUsuario {
 
     public UsuarioDTO listarUsuarioPorId(Integer idUsuario);
 
-    public UsuarioDTO listarUsuarioPorCedula(Integer cedulaUsuario);
+    public UsuarioDTO listarUsuarioPorCedula(Long cedulaUsuario);
 
-    public UsuarioDTOAdmin listarUsuarioPorCedulaAdmin(Integer cedulaUsuario);
+    public UsuarioDTOAdmin listarUsuarioPorCedulaAdmin(Long cedulaUsuario);
 
     public UsuarioDTO editarUsuarioPorId(EditarUsuarioDTO editarUsuarioDTO, Integer idUsuario);
 
-    public UsuarioDTO editarUsuarioPorCedula(EditarUsuarioDTO editarUsuarioDTO, Integer cedulaUsuario);
+    public UsuarioDTO editarUsuarioPorCedula(EditarUsuarioDTO editarUsuarioDTO, Long cedulaUsuario);
 
     public void eliminarUsuarioPorId(Integer idUsuario);
 
-    public void eliminarUsuarioPorCedula(Integer cedulaUsuario);
+    public void eliminarUsuarioPorCedula(Long cedulaUsuario);
 
     public UsuarioDTO crearUsuarioDTO(CrearUsuarioDTO crearUsuarioDTO);
 

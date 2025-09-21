@@ -15,7 +15,7 @@ public class UsuarioDTOAdmin {
 
     private String apellido;
 
-    private Integer cedula;
+    private Long cedula;
 
     private String email;
 

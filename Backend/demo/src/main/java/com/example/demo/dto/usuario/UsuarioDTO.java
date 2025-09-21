@@ -9,6 +9,8 @@ public class UsuarioDTO {
 
     private String nombre;
 
+    private Long cedula;
+
     private String apellido;
 
     private String email;

@@ -1,4 +1,5 @@
 package com.example.demo.servicio.usuario;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -14,6 +15,7 @@ import com.example.demo.modelo.usuario.Usuario;
 import com.example.demo.repositorio.RepositorioUsuario;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 
 @Service
 public class UsuarioServicio implements IUsuario {
@@ -31,6 +33,7 @@ public class UsuarioServicio implements IUsuario {
 
         dtoResponse.setNombre(usuario.getNombre());
         dtoResponse.setApellido(usuario.getApellido());
+        dtoResponse.setCedula(usuario.getCedula());
         dtoResponse.setEmail(usuario.getEmail());
         dtoResponse.setDireccion(usuario.getDireccion());
 
@@ -56,7 +59,7 @@ public class UsuarioServicio implements IUsuario {
     @Override
     public UsuarioDTO crearUsuarioDTO(CrearUsuarioDTO crearUsuarioDTO) {
 
-        Optional<Usuario> buscarUsuario = repositorioUsuario.findUsuarioByCedula(crearUsuarioDTO.getCedula());
+        Optional<Usuario> buscarUsuario = repositorioUsuario.findByCedula(crearUsuarioDTO.getCedula());
 
         if (buscarUsuario.isPresent()) {
             throw new IllegalArgumentException(
@@ -103,9 +106,9 @@ public class UsuarioServicio implements IUsuario {
     }
 
     @Override
-    public UsuarioDTO listarUsuarioPorCedula(Integer cedulaUsuario) {
+    public UsuarioDTO listarUsuarioPorCedula(Long cedulaUsuario) {
 
-        Usuario buscarUsuario = repositorioUsuario.findUsuarioByCedula(cedulaUsuario).orElseThrow(
+        Usuario buscarUsuario = repositorioUsuario.findByCedula(cedulaUsuario).orElseThrow(
                 () -> new EntityNotFoundException("No se encontró usuario con el id: %s" + cedulaUsuario));
 
         return convertirUsuarioEnDTO(buscarUsuario);
@@ -124,8 +127,8 @@ public class UsuarioServicio implements IUsuario {
     }
 
     @Override
-    public UsuarioDTOAdmin listarUsuarioPorCedulaAdmin(Integer cedulaUsuario) {
-        Usuario buscarUsuario = repositorioUsuario.findUsuarioByCedula(cedulaUsuario).orElseThrow(
+    public UsuarioDTOAdmin listarUsuarioPorCedulaAdmin(Long cedulaUsuario) {
+        Usuario buscarUsuario = repositorioUsuario.findByCedula(cedulaUsuario).orElseThrow(
                 () -> new EntityNotFoundException("No se encontró usuario con el id: %s" + cedulaUsuario));
 
         return convertirUsuarioEnDTOAdmin(buscarUsuario);
@@ -146,9 +149,9 @@ public class UsuarioServicio implements IUsuario {
     }
 
     @Override
-    public UsuarioDTO editarUsuarioPorCedula(EditarUsuarioDTO editarUsuarioDTO, Integer cedulaUsuario) {
+    public UsuarioDTO editarUsuarioPorCedula(EditarUsuarioDTO editarUsuarioDTO, Long cedulaUsuario) {
 
-        Usuario existente = repositorioUsuario.findUsuarioByCedula(cedulaUsuario).orElseThrow(
+        Usuario existente = repositorioUsuario.findByCedula(cedulaUsuario).orElseThrow(
                 () -> new EntityNotFoundException("No se encontró usuario con el id: %s" + cedulaUsuario));
 
         existente.setPassword(editarUsuarioDTO.getPassword());
@@ -160,20 +163,23 @@ public class UsuarioServicio implements IUsuario {
     }
 
     @Override
+    @Transactional
     public void eliminarUsuarioPorId(Integer id) {
 
         Usuario existente = repositorioUsuario.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("No se encontró usuario con el id: %s" + id));
 
-        repositorioUsuario.delete(existente);
+        repositorioUsuario.deleteById(existente.getId());
     }
 
     @Override
-    public void eliminarUsuarioPorCedula(Integer cedulaUsuario) {
+    @Transactional
+    public void eliminarUsuarioPorCedula(Long cedulaUsuario) {
 
-        Usuario existente = repositorioUsuario.findUsuarioByCedula(cedulaUsuario).orElseThrow(
-                () -> new EntityNotFoundException("No se encontró usuario con el id: %s" + cedulaUsuario));
-        repositorioUsuario.delete(existente);
+        Usuario existente = repositorioUsuario.findByCedula(cedulaUsuario).orElseThrow(
+                () -> new EntityNotFoundException("No se encontró usuario con la cedula: %s" + cedulaUsuario));
+
+        repositorioUsuario.deleteByCedula(existente.getCedula());
     }
 
 }

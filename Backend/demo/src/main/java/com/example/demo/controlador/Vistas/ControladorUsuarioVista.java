@@ -5,6 +5,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -59,6 +60,19 @@ public class ControladorUsuarioVista {
             model.addAttribute("error", "Error al cargar usuarios: " + e.getMessage());
             return "usuario/listar";
         }
+    }
+
+    @PostMapping("/eliminar/{cedula}")
+    public String eliminarUsuario(@PathVariable Long cedula, RedirectAttributes flash) {
+        try {
+            usuarioServicio.eliminarUsuarioPorCedula(cedula); // Llama al servicio para borrar el usuario
+            flash.addFlashAttribute("success", "Usuario eliminado con éxito.");
+        } catch (Exception e) {
+            flash.addFlashAttribute("error", "Error al eliminar el usuario: " + e.getMessage());
+        }
+        
+        // Redirigimos al usuario a la lista de productos
+        return "redirect:/tienda/usuario/listar"; 
     }
 
 }

@@ -10,8 +10,8 @@ import com.example.demo.modelo.usuario.Usuario;
 @Repository
 public interface RepositorioUsuario extends JpaRepository<Usuario, Integer> {
 
-    Optional<Usuario> findUsuarioByCedula(Integer cedula);
+    Optional<Usuario> findByCedula(Long cedula);
 
-    void deleteUsuarioByCedula(Integer cedula);
+    void deleteByCedula(Long cedula);
 
 }

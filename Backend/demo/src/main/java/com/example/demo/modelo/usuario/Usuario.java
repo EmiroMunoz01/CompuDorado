@@ -30,7 +30,7 @@ public class Usuario {
     private String apellido;
 
     @Column(unique = true)
-    private Integer cedula;
+    private Long cedula;
 
     @Column(unique = true)
     private String email;

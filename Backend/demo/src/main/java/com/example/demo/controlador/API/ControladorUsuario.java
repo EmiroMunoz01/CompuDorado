@@ -42,12 +42,12 @@ public class ControladorUsuario {
     }
 
     @GetMapping("/listar/cedula/{cedulaUsuario}")
-    public ResponseEntity<?> listarUsuarioPorCedula(@PathVariable Integer cedulaUsuario) {
+    public ResponseEntity<?> listarUsuarioPorCedula(@PathVariable Long cedulaUsuario) {
         return ResponseEntity.ok(usuarioServicio.listarUsuarioPorCedula(cedulaUsuario));
     }
 
     @GetMapping("admin/listar/cedula/{cedulaUsuario}")
-    public ResponseEntity<?> listarUsuarioPorCedulaAdmin(@PathVariable Integer cedulaUsuario) {
+    public ResponseEntity<?> listarUsuarioPorCedulaAdmin(@PathVariable Long cedulaUsuario) {
         return ResponseEntity.ok(usuarioServicio.listarUsuarioPorCedulaAdmin(cedulaUsuario));
     }
 
@@ -59,12 +59,12 @@ public class ControladorUsuario {
 
     @PutMapping("/editar/cedula/{cedulaUsuario}")
     public ResponseEntity<?> editarUsuarioPorCedula(@RequestBody @Valid EditarUsuarioDTO usuario,
-            @PathVariable Integer cedulaUsuario) {
+            @PathVariable Long cedulaUsuario) {
         return ResponseEntity.ok(usuarioServicio.editarUsuarioPorCedula(usuario, cedulaUsuario));
     }
 
     @DeleteMapping("/eliminar/cedula/{cedulaUsuario}")
-    public ResponseEntity<?> eliminarUsuarioPorIdentificacion(@PathVariable Integer cedulaUsuario) {
+    public ResponseEntity<?> eliminarUsuarioPorIdentificacion(@PathVariable Long cedulaUsuario) {
         usuarioServicio.eliminarUsuarioPorCedula(cedulaUsuario);
         return ResponseEntity.noContent().build(); // 204 sin body
     }

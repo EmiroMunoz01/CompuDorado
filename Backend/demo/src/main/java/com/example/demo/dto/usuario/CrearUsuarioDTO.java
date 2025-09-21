@@ -16,7 +16,7 @@ public class CrearUsuarioDTO {
     private String apellido;
 
     @NotNull(message = "La cedula es obligatoria")
-    private Integer cedula;
+    private Long cedula;
 
     @NotBlank(message = "El email no puede estar vacío")
     private String email;
