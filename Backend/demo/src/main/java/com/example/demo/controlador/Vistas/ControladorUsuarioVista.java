@@ -1,7 +1,5 @@
 package com.example.demo.controlador.Vistas;
 
-import java.util.Optional;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -13,10 +11,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.demo.dto.usuario.CrearUsuarioDTO;
+import com.example.demo.dto.usuario.EditarUsuarioDTO;
 import com.example.demo.dto.usuario.UsuarioDTO;
-import com.example.demo.modelo.usuario.Usuario;
 import com.example.demo.servicio.usuario.UsuarioServicio;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 
 @Controller
@@ -79,26 +78,44 @@ public class ControladorUsuarioVista {
         return "redirect:/tienda/usuario/listar";
     }
 
-    // En tu controlador web (no el de la API)
-// Asegúrate de que estás usando el ID para buscar, es más robusto.
     @GetMapping("/editar/{cedulaUsuario}")
     public String mostrarFormularioEdicion(@PathVariable Long cedulaUsuario, Model model, RedirectAttributes flash) {
+        try {
+            // Buscar el usuario para verificar que existe
+            UsuarioDTO usuarioExistente = usuarioServicio.listarUsuarioPorCedula(cedulaUsuario);
 
-        // 1. Busca el usuario por su ID
-        UsuarioDTO usuarioOptional = usuarioServicio.listarUsuarioPorCedula(cedulaUsuario);
+            // Crear un EditarUsuarioDTO vacío para el formulario
+            EditarUsuarioDTO editarUsuarioDTO = new EditarUsuarioDTO();
+            // Pre-cargar con los datos actuales si quieres mostrar los valores existentes
+            editarUsuarioDTO.setPassword(usuarioExistente.getPassword()); 
+            editarUsuarioDTO.setDireccion(usuarioExistente.getDireccion());
 
-        // 2. Valida si el usuario existe
-        if (usuarioOptional.isEmpty()) {
-            flash.addFlashAttribute("error", "Usuario no encontrado.");
+            model.addAttribute("usuario", editarUsuarioDTO);
+            model.addAttribute("cedula", cedulaUsuario); // Para pasarla al formulario
+
+            return "usuario/editar";
+
+        } catch (EntityNotFoundException e) {
+            flash.addFlashAttribute("error", "El usuario no existe");
             return "redirect:/tienda/usuario/listar";
         }
+    }
 
-        // 3. Pasa el usuario y el título a la vista
-        model.addAttribute("usuario", usuarioOptional.get());
-        model.addAttribute("titulo", "Editar Usuario");
+    @PostMapping("/editar/{cedulaUsuario}")
+    public String procesarEdicion(@PathVariable Long cedulaUsuario,
+            @ModelAttribute EditarUsuarioDTO editarUsuarioDTO,
+            RedirectAttributes flash) {
+        try {
+            // Usar tu método existente para editar por cédula
+            usuarioServicio.editarUsuarioPorCedula(editarUsuarioDTO, cedulaUsuario);
 
-        // 4. Muestra la nueva vista de edición
-        return "usuario/formulario-edicion"; // Nombre del archivo HTML
+            flash.addFlashAttribute("success", "Usuario actualizado exitosamente");
+            return "redirect:/tienda/usuario/listar";
+
+        } catch (EntityNotFoundException e) {
+            flash.addFlashAttribute("error", "El usuario no existe");
+            return "redirect:/tienda/usuario/listar";
+        }
     }
 
 }

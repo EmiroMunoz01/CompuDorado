@@ -24,7 +24,6 @@ public class UsuarioServicio implements IUsuario {
 
     public UsuarioServicio(RepositorioUsuario repositorioUsuario) {
         this.repositorioUsuario = repositorioUsuario;
-
     }
 
     private UsuarioDTO convertirUsuarioEnDTO(Usuario usuario) {
@@ -34,6 +33,7 @@ public class UsuarioServicio implements IUsuario {
         dtoResponse.setNombre(usuario.getNombre());
         dtoResponse.setApellido(usuario.getApellido());
         dtoResponse.setCedula(usuario.getCedula());
+        dtoResponse.setPassword(usuario.getPassword());
         dtoResponse.setEmail(usuario.getEmail());
         dtoResponse.setDireccion(usuario.getDireccion());
 
@@ -154,9 +154,12 @@ public class UsuarioServicio implements IUsuario {
         Usuario existente = repositorioUsuario.findByCedula(cedulaUsuario).orElseThrow(
                 () -> new EntityNotFoundException("No se encontró usuario con el id: %s" + cedulaUsuario));
 
+        existente.setNombre(editarUsuarioDTO.getNombre());
+        existente.setApellido(editarUsuarioDTO.getApellido());
+        existente.setCedula(editarUsuarioDTO.getCedula());
+        existente.setEmail(editarUsuarioDTO.getEmail());
         existente.setPassword(editarUsuarioDTO.getPassword());
         existente.setDireccion(editarUsuarioDTO.getDireccion());
-
         repositorioUsuario.save(existente);
 
         return convertirUsuarioEnDTO(existente);
